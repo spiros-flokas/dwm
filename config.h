@@ -2,7 +2,7 @@
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int gappx     = 5;        /* gaps between windows */
+static const unsigned int gappx     = 6;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayonleft = 0;   	/* 0: systray in the right corner, >0: systray on left of status text */
@@ -11,38 +11,94 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;     /* 0 means no bar */
 static const int topbar             = 1;     /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
+/*static const char *fonts[]          = { "monospace:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
+static const char col_cyan[]        = "#005577";*/
+
+/* fonts */
+
+static const char *fonts[] = { "UbuntuMono Nerd Font:size=14:weight=bold:antialias=true:autohint:true" };
+static const char dmenufont[] = "UbuntuMono Nerd Font:size=12:antialias=true:autohint=true";
 
 /* solarized colors http://ethanschoonover.com/solarized */
-static const char s_base03[]        = "#002b36";
+/*static const char s_base03[]        = "#002b36";
 static const char s_base02[]        = "#073642";
 static const char s_base01[]        = "#586e75";
 static const char s_base00[]        = "#657b83";
 static const char s_base0[]         = "#839496";
 static const char s_base1[]         = "#93a1a1";
 static const char s_base2[]         = "#eee8d5";
-static const char s_base3[]         = "#fdf6e3";
+static const char s_base3[]         = "#fdf6e3";*/
 
+/* colors */
 
-static const char *colors[][3]      = {
-	/*               fg         bg         border   */
-	{ s_base0, s_base03, s_base2 },      /* SchemeNorm dark */
-	{ s_base0, s_base02, s_base2 },      /* SchemeSel dark */
-	{ s_base00, s_base3, s_base02 },     /* SchemeNorm light */
-	{ s_base00, s_base2, s_base02},      /* SchemeSel light */
-	{ col_gray3, col_gray1, col_gray2 }, /* SchemeNorm orig */
-	{ col_gray4, col_cyan,  col_cyan  }, /* SchemeSel orig */
+struct Theme {
+	char *inactive;
+	char *active;
+	char *bg;
+	char *focus;
 };
 
-/* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const struct Theme material = {
+	.inactive = "#4c566a",
+	.active = "#ffffff",
+	.bg = "#0f101a",
+	.focus = "#a151d3"
+};
 
+static const struct Theme onedark = {
+	.inactive = "#4c566a",
+	.active = "#ffffff",
+	.bg = "#1e2127",
+	.focus = "#E06C75"
+};
+
+static const struct Theme nord = {
+	.inactive = "#4c566a",
+	.active = "#ffffff",
+	.bg = "#2e3440",
+	.focus = "#81a1c1"
+};
+
+static const struct Theme monokai_pro = {
+	.inactive = "#727072",
+	.active = "#2d2a2e",
+	.bg = "#2d2a2e",
+	.focus = "#a9dc76"
+};
+	
+static const char window_border[] = "#000000";
+
+static const char *colors[][3] = {
+	// fg		bg		border
+	{ material.inactive, material.bg, window_border },
+	{ material.active, material.focus, material.focus },
+
+	{ onedark.inactive, onedark.bg, window_border },
+	{ onedark.active, onedark.focus, onedark.focus },
+
+	{ nord.inactive, nord.bg, window_border },
+	{ nord.active, nord.focus, nord.focus },
+
+	{ monokai_pro.inactive, monokai_pro.bg, window_border },
+	{ monokai_pro.active, monokai_pro.focus, monokai_pro.focus },
+};
+//static const char *colors[][3]      = {
+	/*               fg         bg         border   */
+//	{ s_base0, s_base03, s_base2 },      /* SchemeNorm dark */
+//	{ s_base0, s_base02, s_base2 },      /* SchemeSel dark */
+//	{ s_base00, s_base3, s_base02 },     /* SchemeNorm light */
+//	{ s_base00, s_base2, s_base02},      /* SchemeSel light */
+//	{ col_gray3, col_gray1, col_gray2 }, /* SchemeNorm orig */
+//	{ col_gray4, col_cyan,  col_cyan  }, /* SchemeSel orig */ 
+//};
+
+/* tagging */
+static const char *tags[] = { " ", " ", " ", " ", " ", "  ", " ", " ", " " };
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
@@ -79,7 +135,7 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", material.bg, "-nf", material.active, "-sb", material.bg, "-sf", material.focus, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
 static const Key keys[] = {
