@@ -138,36 +138,49 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", material.bg, "-nf", material.active, "-sb", material.bg, "-sf", material.focus, NULL };
 static const char *termcmd[]  = { "st", NULL };
 
+#include <X11/XF86keysym.h>
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	// Toggle bar
+	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
+	// Switch between windows
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+	// Change window sizes
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
+	// Kill window
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+	// Change layouts
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
+	// Toggle floating
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+	// Focus next - prev monitor
 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
 	{ MODKEY,                       XK_period, focusmon,       {.i = +1 } },
+	// Send window to next - prev monitor
 	{ MODKEY|ShiftMask,             XK_comma,  tagmon,         {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_period, tagmon,         {.i = +1 } },
-	{ MODKEY,                       XK_minus,  setgaps,        {.i = -1 } },
 	{ MODKEY|ShiftMask,             XK_t,      schemeToggle,   {0} },
 	{ MODKEY|ShiftMask,             XK_z,      schemeCycle,    {0} },
+	// Increase - decrease gaps
+	{ MODKEY,                       XK_minus,  setgaps,        {.i = -1 } },
 	{ MODKEY,                       XK_equal,  setgaps,        {.i = +1 } },
 	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
+	// Change color scheme
+	{ MODKEY, 			XK_Left,   schemeToggle,   {0} },
+	{ MODKEY, 			XK_Right,  schemeCycle,    {0} },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -177,8 +190,35 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,           {1} }, 
+	//Restart dwm
+	{ MODKEY|ControlMask,           XK_r,      quit,           {1} },
+	// Quit dwm
+	{ MODKEY|ControlMask,           XK_q,      quit,           {0} }, 
+
+
+// ------------------------ Apps -------------------
+//
+// File explorer
+{ MODKEY, XK_e, spawn, SHCMD("ranger") },
+
+// Browser
+{ MODKEY, XK_b, spawn, SHCMD("google-chrome-stable") },
+
+// Screenshot
+{ MODKEY, XK_s, spawn, SHCMD("scrot") },
+{ MODKEY|ShiftMask, XK_s, spawn, SHCMD("scrot -s") },
+
+// ----------------------- Hardware ----------------
+//
+// Volume
+{0, XF86XK_AudioLowerVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%")},
+{0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%")},
+{0, XF86XK_AudioMute, spawn, SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle%")},
+
+// Brightness
+{0, XF86XK_MonBrightnessUp, spawn, SHCMD("brightnessctl set +10%")},
+{0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 10%-")},
+
 };
 
 /* button definitions */
